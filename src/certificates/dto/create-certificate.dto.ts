@@ -38,13 +38,14 @@ export class CreateCertificateDto {
   @IsNumber()
   amount: number;
 
+
   @ApiProperty({
     example: 'Esta placa se entrega en condiciones....',
-    description: 'Numero de placas entregadas',
+    description: 'Observación',
   })
   @IsNotEmpty()
   @IsString()
-  detail: string;
+  observation: string;
 
   @ApiProperty({
     example: '293273612',

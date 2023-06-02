@@ -22,7 +22,7 @@ export class UsersService {
   ) {}
 
   async getMany() {
-    return await this.userRepository.find({ where: { isActive: true } });
+    return await this.userRepository.find();
   }
 
   async getOne(id: number, userEntity?: User) {
@@ -32,8 +32,7 @@ export class UsersService {
         !userEntity ? u : !!u && userEntity.id === u.id ? u : null,
       );
 
-    if (!user)
-      throw new NotFoundException('El usuario no esta autorizado');
+    if (!user) throw new NotFoundException('El usuario no esta autorizado');
 
     return user;
   }
@@ -53,15 +52,19 @@ export class UsersService {
     return user;
   }
 
-  async editOne(id: number, dto: UpdateUserDto, userEntity?: User) {
+  async editOne(id: number, dto: UpdateUserDto) {
+    console.log(id);
     console.log(dto);
-    const user = await this.getOne(id, userEntity);
-    const editedUser = Object.assign(user, dto);
-    return await this.userRepository.save(editedUser);
+    const user = await this.userRepository.find({where:{id:id}});
+    user[0].isActive = dto.isActive;
+    console.log('ss');
+    return await this.userRepository.save(user[0]);
   }
 
   async deleteOne(id: number, userEntity?: User) {
+    console.log('sss');
     const user = await this.getOne(id, userEntity);
+    console.log(user);
     user.isActive = false;
     return await this.userRepository.save(user);
   }

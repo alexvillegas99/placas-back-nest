@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { Certificate } from './entities/certificate.entity';
 import { PlateModule } from 'src/plate/plate.module';
+import { CertificateLogsModule } from 'src/certificate-logs/certificate-logs.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Certificate]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    PlateModule
+    PlateModule,
+    CertificateLogsModule
   ],
   controllers: [CertificatesController],
   providers: [CertificatesService]

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePlateDto } from './dto/create-plate.dto';
 import { UpdatePlateDto } from './dto/update-plate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +12,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { PlateLogsService } from 'src/plate-logs/plate-logs.service';
 import { PayloadActions } from 'src/common/helpers/emuns/payload-actions.emun';
+import { PlateReportDto } from './dto/plate-report.dto';
 @Injectable()
 export class PlateService {
   constructor(
@@ -17,6 +22,7 @@ export class PlateService {
   ) {}
 
   async create(createPlateDto: CreatePlateDto) {
+    createPlateDto.plate = createPlateDto.plate.toUpperCase();
     const newPlate = this.plateRepository.create(createPlateDto);
     const plate = await this.plateRepository.save(newPlate);
     this.PlateLogService.create({
@@ -50,9 +56,35 @@ export class PlateService {
       .getOne();
     return plates;
   }
+  async find(filter: string) {
+    const plates = await this.plateRepository
+      .createQueryBuilder('plate')
+      .leftJoinAndSelect('plate.user', 'user', 'plate.userId = user.id')
+      .select(['plate', 'user.name'])
+      .where('plate.isActive=true')
+      .getMany();
+
+    return plates.filter(
+      (element) =>
+        element.plate.toLocaleLowerCase().includes(filter) ||
+        element.plate_type.toLocaleLowerCase().includes(filter) ||
+        element.vehicle_type.toLocaleLowerCase().includes(filter),
+    );
+  }
+
+  async findPlate(find: string) {
+    const plate = await this.plateRepository.findOne({
+      where: { plate: find.toLocaleLowerCase(), isActive: true, status: false },
+    });
+
+    if (!plate) throw new NotFoundException(`No se encontró la placa`);
+
+    return plate;
+  }
+
+
 
   async update(id: number, updatePlateDto: UpdatePlateDto) {
-    
     const plate = await this.plateRepository.findOne({ where: { id } });
 
     if (!plate) {
@@ -70,7 +102,7 @@ export class PlateService {
     plate.plate_type = updatePlateDto.plate_type;
     plate.user = updatePlateDto.user;
     plate.vehicle_type = updatePlateDto.vehicle_type;
-    if(updatePlateDto.status){
+    if (updatePlateDto.status) {
       plate.status = updatePlateDto.status;
     }
 
@@ -89,7 +121,10 @@ export class PlateService {
   async remove(id: number, idUser: any) {
     const plate = await this.plateRepository.findOne({ where: { id } });
 
-    if (!plate) throw new BadRequestException(`La placa con el ${id} no se encontró.`);
+    if (!plate)
+      throw new BadRequestException(
+        `El certificate con el ${id} no se encontró.`,
+      );
 
     plate.user = idUser;
     plate.isActive = false;

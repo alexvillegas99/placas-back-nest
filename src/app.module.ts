@@ -29,6 +29,7 @@ import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { PlateType } from './plate-type/entities/plate-type.entity';
 import { Roles } from './roles/entities/role.entity';
 import { Certificate } from 'crypto';
+import { CertificateLogs } from './certificate-logs/entities/ceretificate-log.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
@@ -41,7 +42,16 @@ import { Certificate } from 'crypto';
         username: configService.get(DATABASE_USERNAME),
         password: configService.get(DATABASE_PASSWORD),
         database: configService.get(DATABASE_NAME),
-        entities: [User,Plate,PlateLogs,VehicleType,PlateType,Roles,Certificate], 
+        entities: [
+          User,
+          Plate,
+          PlateLogs,
+          VehicleType,
+          PlateType,
+          Roles,
+          Certificate,
+          CertificateLogs,
+        ],
         synchronize: true,
         autoLoadEntities: true,
       }),

@@ -25,8 +25,10 @@ export class Certificate  extends BaseEntity {
   @Column({ type: 'int' })
   amount: number;
 
+
+
   @Column({ type: 'varchar', length: 150 })
-  detail: string;
+  observation: string;
 
   @Column({ type: 'varchar', length: 150 })
   name: string;

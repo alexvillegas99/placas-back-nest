@@ -32,7 +32,7 @@ export class UsersController {
   async getMany() {
     this.logger.log('Obteniendo todos los usuarios ');
     const data = await this.userService.getMany();
-    return { data };
+    return  data ;
   }
 
   @Get('/userSeed')
@@ -78,28 +78,19 @@ export class UsersController {
     return { message: 'User created', data };
   }
 
-  @Auth({
-    possession: 'own',
-    action: 'update',
-    resource: AppResource.USER,
-  })
+
   @Put(':id')
   async editOne(
     @Param('id') id: number,
     @Body() dto: UpdateUserDto,
     @User() user: UserEntity,
   ) {
-    this.logger.log(`Actualizando usuario: ${dto.username}`);
+    this.logger.log(`Actualizando usuario: ${id}`);
     let data;
-
-    if (this.rolesBuilder.can(user.roles).updateAny(AppResource.USER).granted) {
-      // esto es un admin
-      data = await this.userService.editOne(id, dto);
-    } else {
       // esto es un author
       const { roles, ...rest } = dto;
-      data = await this.userService.editOne(id, rest, user);
-    }
+      data = await this.userService.editOne(id, rest);
+    
     return { message: 'Usuario editado', data };
   }
 

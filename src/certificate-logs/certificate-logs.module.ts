@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CertificateLogsService } from './certificate-logs.service';
-import { CertificateLogsController } from './certificate-logs.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CertificateLogs } from './entities/ceretificate-log.entity';
 
 @Module({
-  controllers: [CertificateLogsController],
-  providers: [CertificateLogsService]
+  imports: [
+    TypeOrmModule.forFeature([CertificateLogs])
+  ],
+  providers: [CertificateLogsService],
+  exports:[CertificateLogsService]
 })
 export class CertificateLogsModule {}

@@ -18,6 +18,8 @@ import { AppResource } from 'src/app.roles';
 @Controller('certificates')
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
+
+  
   @ApiBearerAuth()
   @Auth({
     possession: 'any',
@@ -29,30 +31,53 @@ export class CertificatesController {
     @Body() createCertificateDto: CreateCertificateDto,
     @User() user: UserEntity,
   ) {
-    console.log(user);
-    return this.certificatesService.create({...createCertificateDto,user:user.id});
+   
+    return this.certificatesService.create({
+      ...createCertificateDto,
+      user: user.id,
+    });
   }
-
+  @Auth({
+    possession: 'any',
+    action: 'read',
+    resource: AppResource.CERTIFICATES,
+  })
   @Get()
   findAll() {
     return this.certificatesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.certificatesService.findOne(+id);
+  @Auth({
+    possession: 'any',
+    action: 'read',
+    resource: AppResource.CERTIFICATES,
+  })
+  @Get('/buscar/:filter')
+  find(@Param('filter') filter: string) {
+    return this.certificatesService.find(filter.toLocaleLowerCase());
   }
 
+  @Auth({
+    possession: 'any',
+    action: 'update',
+    resource: AppResource.CERTIFICATES,
+  })
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateCertificateDto: UpdateCertificateDto,
   ) {
+
     return this.certificatesService.update(+id, updateCertificateDto);
   }
-
+  @Auth({
+    possession: 'any',
+    action: 'delete',
+    resource: AppResource.CERTIFICATES,
+  })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.certificatesService.remove(+id);
+  remove(@Param('id') id: string,@User() user: UserEntity) {
+    const idUser = user.id;
+    return this.certificatesService.remove(+id,+idUser);
   }
 }

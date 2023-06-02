@@ -8,43 +8,65 @@ import {
   IsNotEmpty,
   IsBoolean,
   IsOptional,
+  IsDateString,
 } from 'class-validator';
 import { PlateTypes as PlateType } from 'src/common/helpers/emuns/plate.emun';
 import { VehicleType } from 'src/common/helpers/emuns/vehicle.emun';
 
-export class CreatePlateDto {
-  @ApiProperty({
-    example: 'TBA123',
-    description: 'Placa del vehículo',
-  })
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(15)
-  plate: string;
+export class PlateReportDto {
 
-  @ApiProperty({
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Estado de la placa',
+  })
+  @IsBoolean()
+  @IsOptional()
+  status: boolean;
+
+
+
+  @ApiPropertyOptional({
     example: 'Publico',
     description: 'Tipo de placa',
     enum:PlateType
   })
-  @IsNotEmpty()
   @IsString()
   @IsEnum(PlateType)
+  @IsOptional()
   plate_type: string;
 
-  @ApiProperty({
+
+
+  @ApiPropertyOptional({
     example: 'Moto',
     description: 'Tipo de vehículo',
     enum:VehicleType
   })
-  @IsNotEmpty()
-  @IsString()
+  @IsDateString()
   @IsEnum(VehicleType)
+  @IsOptional()
   vehicle_type: string;
 
+
+
+  @ApiPropertyOptional({
+    example: 'Moto',
+    description: 'Tipo de vehículo',
+  })
+  @IsDateString()
   @IsOptional()
-  user?: any;
-  
+  date_start: string;
+
+
+
+  @ApiPropertyOptional({
+    example: 'Moto',
+    description: 'Tipo de vehículo',
+    enum:VehicleType
+  })
+  @IsDateString()
   @IsOptional()
-  status:boolean;
+  date_end?: any;
+
 }

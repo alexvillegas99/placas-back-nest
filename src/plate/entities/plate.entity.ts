@@ -26,7 +26,7 @@ export class Plate extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
+
   @Column({ type: 'varchar', length: 15, default: '' })
   plate: string;
 
@@ -48,20 +48,20 @@ export class Plate extends BaseEntity {
  @OneToOne(() => Certificate, certificate => certificate.plate)
   certificate: Certificate;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
   createdAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp'})
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
   @BeforeInsert()
   async validatePlate() {
     const existingPlate = await Plate.findOne({
-      where: { plate: this.plate },
+      where: { plate: this.plate, isActive:true },
     });
 
     if (existingPlate) {
-      throw new ConflictException('La placa de esta placa ta existe');
+      throw new ConflictException('La placa ya existe');
     }
-  }
+  } 
 }
