@@ -44,9 +44,11 @@ export class Plate extends BaseEntity {
 
   @ManyToOne((_) => User, (user) => user.plate)
   user: User;
+  
 
- @OneToOne(() => Certificate, certificate => certificate.plate)
-  certificate: Certificate;
+
+/*  @OneToOne(() => Certificate, certificate => certificate.plate)
+  certificate: Certificate; */
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
   createdAt: Date;

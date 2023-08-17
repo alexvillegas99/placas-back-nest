@@ -19,9 +19,9 @@ async function bootstrap() {
   );
   const config = app.get(ConfigService);
   const port = config.get(PORT);
-  initSwagger(app);
+/*   initSwagger(app); */
   await app.listen(port);
   logger.log(`App running in ${await app.getUrl()}/api`);
-  logger.log(await `Swagger running in http://localhost:${port}/docs`);
+  /* logger.log(await `Swagger running in http://localhost:${port}/docs`); */
 }
 bootstrap();

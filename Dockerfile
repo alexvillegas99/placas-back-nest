@@ -1,20 +1,10 @@
-# Use a base image with Node.js
-FROM node:14-alpine
-
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application files to the container
+FROM node:lts-alpine
+ENV NODE_ENV=production
+WORKDIR /usr/src/app
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+RUN npm install --production --silent && mv node_modules ../
 COPY . .
-
-# Expose the port on which your Nest.js application listens
 EXPOSE 8083
-
-# Specify the command to start your application
+RUN chown -R node /usr/src/app
+USER node
 CMD ["npm", "run", "start:prod"]

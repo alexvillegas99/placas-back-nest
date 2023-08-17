@@ -14,14 +14,9 @@ import { PlateTypes as PlateType } from 'src/common/helpers/emuns/plate.emun';
 import { VehicleType } from 'src/common/helpers/emuns/vehicle.emun';
 
 export class CreateCertificateDto {
-  @ApiProperty({
-    example: 1,
-    description: 'Placa del vehículo',
-  })
-
-  @IsOptional()
-  plate: any;
-
+  @ApiPropertyOptional({ type: [], example: [] })
+  @IsArray()
+  plates: string[];
   @ApiProperty({
     example: 1,
     description: 'Numero de acta',
@@ -29,15 +24,6 @@ export class CreateCertificateDto {
   @IsNotEmpty()
   @IsNumber()
   number: number;
-
-  @ApiProperty({
-    example: 2,
-    description: 'Numero de placas entregadas',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  amount: number;
-
 
   @ApiProperty({
     example: 'Esta placa se entrega en condiciones....',

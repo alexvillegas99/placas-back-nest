@@ -11,6 +11,7 @@ export class CertificateLogsService {
         private readonly certificateLogsRepository: Repository<CertificateLogs>,
       ) {}
       async create(certificateLogsDto: CertificateLogsDto) {
+        console.log('creando log')
         const plateLog =  await this.certificateLogsRepository.create(certificateLogsDto);
         await this.certificateLogsRepository.save(plateLog);
       }

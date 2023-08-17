@@ -19,7 +19,6 @@ import { AppResource } from 'src/app.roles';
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
-  
   @ApiBearerAuth()
   @Auth({
     possession: 'any',
@@ -27,12 +26,11 @@ export class CertificatesController {
     resource: AppResource.CERTIFICATES,
   })
   @Post()
-  create(
+  async create(
     @Body() createCertificateDto: CreateCertificateDto,
     @User() user: UserEntity,
   ) {
-   
-    return this.certificatesService.create({
+    return await this.certificatesService.create({
       ...createCertificateDto,
       user: user.id,
     });
@@ -43,9 +41,11 @@ export class CertificatesController {
     resource: AppResource.CERTIFICATES,
   })
   @Get()
-  findAll() {
-    return this.certificatesService.findAll();
+  async findAll() {
+    return await this.certificatesService.findAll();
   }
+
+
 
   @Auth({
     possession: 'any',
@@ -53,8 +53,8 @@ export class CertificatesController {
     resource: AppResource.CERTIFICATES,
   })
   @Get('/buscar/:filter')
-  find(@Param('filter') filter: string) {
-    return this.certificatesService.find(filter.toLocaleLowerCase());
+  async find(@Param('filter') filter: string) {
+    return await this.certificatesService.find(filter.toLocaleLowerCase());
   }
 
   @Auth({
@@ -63,12 +63,11 @@ export class CertificatesController {
     resource: AppResource.CERTIFICATES,
   })
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCertificateDto: UpdateCertificateDto,
   ) {
-
-    return this.certificatesService.update(+id, updateCertificateDto);
+    return await this.certificatesService.update(+id, updateCertificateDto);
   }
   @Auth({
     possession: 'any',
@@ -76,8 +75,8 @@ export class CertificatesController {
     resource: AppResource.CERTIFICATES,
   })
   @Delete(':id')
-  remove(@Param('id') id: string,@User() user: UserEntity) {
+  async remove(@Param('id') id: string, @User() user: UserEntity) {
     const idUser = user.id;
-    return this.certificatesService.remove(+id,+idUser);
+    return await this.certificatesService.remove(+id, +idUser);
   }
 }

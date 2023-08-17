@@ -14,7 +14,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() loginDto: any, @User() user: UserEntity) {
+  async login(@Body() loginDto: LoginDto, @User() user: UserEntity) {
     const data = await this.authService.login(user);
     return {
       message: 'Login exitoso',

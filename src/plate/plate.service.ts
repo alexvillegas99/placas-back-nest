@@ -48,13 +48,13 @@ export class PlateService {
   }
 
   async findOne(id: number) {
-    const plates = await this.plateRepository
+    const plate = await this.plateRepository
       .createQueryBuilder('plate')
       .leftJoinAndSelect('plate.user', 'user', 'plate.userId = user.id')
       .select(['plate', 'user.name'])
-      .where('plate.id=:id && plate.isActive=true', { id })
+      .where('plate.id=:id', { id })
       .getOne();
-    return plates;
+    return plate;
   }
   async find(filter: string) {
     const plates = await this.plateRepository
@@ -74,7 +74,7 @@ export class PlateService {
 
   async findPlate(find: string) {
     const plate = await this.plateRepository.findOne({
-      where: { plate: find.toLocaleLowerCase(), isActive: true, status: false },
+      where: { plate: find.toLocaleLowerCase() },
     });
 
     if (!plate) throw new NotFoundException(`No se encontró la placa`);
